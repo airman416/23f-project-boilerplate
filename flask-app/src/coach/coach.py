@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 import json
 from src import db
+import datetime
 
 coach = Blueprint('coach', __name__)
 
@@ -11,7 +12,7 @@ def get_coach():
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    cursor.execute('SELECT id, last_name, first_name FROM coach')
+    cursor.execute('SELECT id, last_name, first_name, began_coaching, joined FROM coach')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -39,7 +40,11 @@ def add_new_coach():
 
     # extracting the variable
     began_coaching = the_data['began_coaching']
+    began_coaching = datetime.datetime.strptime(began_coaching, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
+    
     joined = the_data['joined']
+    joined = datetime.datetime.strptime(joined, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
+    
     last_name  = the_data['last_name']
     first_name = the_data['first_name']
 
@@ -48,7 +53,7 @@ def add_new_coach():
     query += began_coaching + '", "'
     query += joined + '", "'
     query += last_name + '", "'
-    query += first_name + ')"'
+    query += first_name + '")'
     current_app.logger.info(query)
 
     # executing and committing the insert statement 
