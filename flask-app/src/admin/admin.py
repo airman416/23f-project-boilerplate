@@ -75,11 +75,16 @@ def get_admin_by_id(id):
         the_response.mimetype = 'application/json'
         return the_response
     elif flask.request.method == 'PUT':
-        return None
+        return "no put"
     elif flask.request.method == 'DELETE':
+        # Constructing the query
+        query = '''
+        DELETE FROM admin
+        WHERE id = ''' + str(id)
+
+
+        # executing and committing the insert statement 
         cursor = db.get_db().cursor()
-        query = 'DELETE FROM admin WHERE id = {0}'.format(id)
         cursor.execute(query)
-        the_response.status_code = 200
-        the_response.mimetype = 'application/json'
-        return the_response
+        db.get_db().commit()
+        return 'Deleted Admin!'

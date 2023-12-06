@@ -95,7 +95,7 @@ def delete_athlete(id):
     cursor = db.get_db().cursor()
     cursor.execute(query)
     db.get_db().commit()
-    return 'Success!'
+    return 'Deleted Athlete!'
 
 # Changes size, price, sugar level, and/or ice level of a drink in a given order
 @athlete.route('/athlete/<id>', methods=['PUT'])
