@@ -42,18 +42,15 @@ def add_new_coach():
     began_coaching = the_data['began_coaching']
     began_coaching = datetime.datetime.strptime(began_coaching, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
     
-    joined = the_data['joined']
-    joined = datetime.datetime.strptime(joined, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
-    
     last_name  = the_data['last_name']
     first_name = the_data['first_name']
 
     # Constructing the query
-    query = 'insert into coach (began_coaching, joined, last_name, first_name) values ("'
-    query += began_coaching + '", "'
-    query += joined + '", "'
-    query += last_name + '", "'
-    query += first_name + '")'
+    query = "insert into coach (began_coaching, joined, last_name, first_name) values ('"
+    query += began_coaching + "', "
+    query += "current_timestamp(), '"
+    query += last_name + "', '"
+    query += first_name + "')"
     current_app.logger.info(query)
 
     # executing and committing the insert statement 
@@ -81,7 +78,7 @@ def get_coach_id (id):
 
 
 @coach.route('/coach/<id>', methods=['PUT'])
-def update_coach(coachID):
+def update_coach(id):
     
     # collecting data from the request object 
     the_data = request.json
@@ -89,17 +86,16 @@ def update_coach(coachID):
     
     # extracting the variable
     began_coaching = the_data['began_coaching']
-    joined = the_data['joined']
+    began_coaching = datetime.datetime.strptime(began_coaching, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
     last_name  = the_data['last_name']
     first_name = the_data['first_name']
 
     # Constructing the query
-    the_query = 'UPDATE Coach SET '
-    the_query += 'began_coaching = "' + began_coaching + '", '
-    the_query += 'joined = "' + joined + '", '
-    the_query += 'last_name = "' + last_name + '", '
-    the_query += 'first_name = "' + first_name + ' '
-    the_query += 'WHERE drink_id = {coachID}'
+    the_query = "UPDATE coach SET "
+    the_query += "began_coaching = '" + began_coaching + "', "
+    the_query += "last_name = '" + last_name + "', "
+    the_query += "first_name = '" + first_name + "' "
+    the_query += f"WHERE id = {id}"
 
     current_app.logger.info(the_query)
 
