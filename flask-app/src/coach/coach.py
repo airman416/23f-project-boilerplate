@@ -124,9 +124,9 @@ def delete_coach(id):
 
 
 @coach.route('/coach/<id>/athlete', methods=['GET'])
-def get_coach_athletes (coach_id):
+def get_coach_athletes(id):
 
-    query = 'SELECT last_name, first_name, id FROM athlete WHERE coach_id = ' + str(coach_id)
+    query = f"SELECT last_name, first_name, id FROM athlete WHERE coach_id = {str(id)}"
     current_app.logger.info(query)
 
     cursor = db.get_db().cursor()
@@ -138,18 +138,20 @@ def get_coach_athletes (coach_id):
         json_data.append(dict(zip(column_headers, row)))
     return jsonify(json_data)
   
-    
-@coach.route('/coach/<id>/athlete', methods=['POST'])
-def add_coachs_athlete(coachID, athleteID):
+  
+# setting an athlete's coach
+@coach.route('/coach/<coachID>/athlete', methods=['POST', 'PUT'])
+def add_coachs_athlete(coachID):
 
     # collecting data from the request object 
     the_data = request.json
     current_app.logger.info(the_data)
+    athleteID = the_data['athleteID']
 
     # Constructing the query
-    the_query = 'UPDATE Athlete SET '
-    the_query += 'coach_id = "' + coachID + '", '
-    the_query += 'WHERE id = {athleteID}'
+    the_query = "UPDATE athlete SET "
+    the_query += "coach_id = '" + coachID + "' "
+    the_query += f"WHERE id = {athleteID}"
 
     current_app.logger.info(the_query)
 
@@ -160,19 +162,18 @@ def add_coachs_athlete(coachID, athleteID):
     
     return 'Success!'
 
-
-@coach.route('/coach/<id>/athlete', methods=['PUT'])
-def update_coachs_athlete(coachID, athleteID):
+@coach.route('/coach/<coachID>/athlete', methods=['DELETE'])
+def delete_coachs_athlete(coachID):
     
     # collecting data from the request object 
     the_data = request.json
-    
+    current_app.logger.info(the_data)
+    athleteID = the_data['athleteID']
 
     # Constructing the query
-    the_query = 'UPDATE Athlete SET '
-    the_query += 'coach_id = "' + coachID + '", '
-    the_query += 'WHERE id = {athleteID}'
-    current_app.logger.info(the_data)
+    the_query = "UPDATE athlete SET "
+    the_query += "coach_id = null "
+    the_query += f"WHERE id = {athleteID} AND coach_id = {coachID}"
 
     current_app.logger.info(the_query)
 
@@ -183,23 +184,3 @@ def update_coachs_athlete(coachID, athleteID):
     
     return 'Success!'
 
-@coach.route('/coach/<id>/athlete', methods=['DELETE'])
-def delete_coachs_athlete(coachID, athleteID):
-    
-    # collecting data from the request object 
-    the_data = request.json
-    current_app.logger.info(the_data)
-
-    # Constructing the query
-    the_query = 'UPDATE Athlete SET '
-    the_query += 'coach_id = null'
-    the_query += 'WHERE id = {athleteID}'
-
-    current_app.logger.info(the_query)
-
-    # executing and committing the insert statement 
-    cursor = db.get_db().cursor()
-    cursor.execute(the_query)
-    db.get_db().commit()
-    
-    return 'Success!'
