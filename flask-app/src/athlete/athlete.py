@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 import json
 from src import db
+import datetime
 
 athlete = Blueprint('athlete', __name__)
 
@@ -9,7 +10,8 @@ athlete = Blueprint('athlete', __name__)
 def get_athlete():
     print("got here")
     cursor = db.get_db().cursor()
-    cursor.execute('select last_name, first_name, id from athlete')
+    cursor.execute('''select id, first_name, last_name, date_of_birth, joined,
+                   goal_weight, weight, height, coach_id from athlete''')
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
@@ -32,22 +34,25 @@ def create_athlete():
     weight = the_data['weight']
     height = the_data['height']
     date_of_birth = the_data['date_of_birth']
-    joined = the_data[' joined']
+    date_of_birth = datetime.datetime.strptime(date_of_birth, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
+    joined = the_data['joined']
+    joined = datetime.datetime.strptime(joined, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
     last_name = the_data['last_name']
     first_name = the_data['first_name']
     goal_weight = the_data['goal_weight']
     coach_id = the_data['coach_id']
 
+    
     # Constructing the query
-    query = 'insert into athlete (weight, height, date_of_birth, joined, last_name, first_name, goal_weight) values ("'
-    query += weight + '", "'
-    query += height + '", "'
-    query += date_of_birth + '", "'
-    query += joined + '", "'
-    query += last_name + '", '
-    query += first_name + '", "'
-    query += goal_weight + '", "'
-    query += coach_id + '");'
+    query = "insert into athlete (weight, height, date_of_birth, joined, last_name, first_name, goal_weight, coach_id) values ('"
+    query += weight + "', '"
+    query += height + "', '"
+    query += date_of_birth + "', '"
+    query += joined + "', '"
+    query += last_name + "', '"
+    query += first_name + "', '"
+    query += goal_weight + "', '"
+    query += coach_id + "');"
     current_app.logger.info(query)
 
     # executing and committing the insert statement 
@@ -55,7 +60,7 @@ def create_athlete():
     cursor.execute(query)
     db.get_db().commit()
     
-    return 'Success!'
+    return 'Added athlete!'
 
 
 
@@ -100,15 +105,16 @@ def update_athlete(id):
     weight = the_data['weight']
     height = the_data['height']
     date_of_birth = the_data['date_of_birth']
-    joined = the_data[' joined']
+    joined = the_data['joined']
     last_name = the_data['last_name']
     first_name = the_data['first_name']
     goal_weight = the_data['goal_weight']
     coach_id = the_data['coach_id']
 
     current_app.logger.info(the_data)
-
-    the_query += 'weight = "' + str(weight) + '", '
+    
+    the_query = 'UPDATE athlete SET '
+    the_query += "weight = '" + str(weight) + '", "
     the_query += 'height = "' + str(height) + '", '
     the_query += 'date_of_birth = "' + str(date_of_birth) + '", '
     the_query += 'joined = ' + str(joined) + '", '
