@@ -105,7 +105,9 @@ def update_athlete(id):
     weight = the_data['weight']
     height = the_data['height']
     date_of_birth = the_data['date_of_birth']
+    date_of_birth = datetime.datetime.strptime(date_of_birth, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
     joined = the_data['joined']
+    joined = datetime.datetime.strptime(joined, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
     last_name = the_data['last_name']
     first_name = the_data['first_name']
     goal_weight = the_data['goal_weight']
@@ -114,15 +116,15 @@ def update_athlete(id):
     current_app.logger.info(the_data)
     
     the_query = 'UPDATE athlete SET '
-    the_query += "weight = '" + str(weight) + '", "
-    the_query += 'height = "' + str(height) + '", '
-    the_query += 'date_of_birth = "' + str(date_of_birth) + '", '
-    the_query += 'joined = ' + str(joined) + '", '
-    the_query += 'last_name = "' + last_name + '", '
-    the_query += 'first_name = "' + first_name + '", '
-    the_query += 'goal_weight = ' + str(goal_weight) + '", '
-    the_query += 'coach_id = ' + str(coach_id) + ' '
-    the_query += 'WHERE drink_id = {0};'.format(id)
+    the_query += "weight = '" + str(weight) + "', "
+    the_query += "height = '" + str(height) + "', "
+    the_query += "date_of_birth = '" + str(date_of_birth) + "', "
+    the_query += "joined = '" + str(joined) + "', "
+    the_query += "last_name = '" + last_name + "', "
+    the_query += "first_name = '" + first_name + "', "
+    the_query += "goal_weight = '" + str(goal_weight) + "', "
+    the_query += "coach_id = '" + str(coach_id) + "' "
+    the_query += "WHERE id = {0};".format(id)
 
     current_app.logger.info(the_query)
     
@@ -130,7 +132,7 @@ def update_athlete(id):
     cursor.execute(the_query)
     db.get_db().commit()
 
-    return "successfully editted drink #{0}!".format(id)
+    return "Updated athlete!"
 
 ###########################################################
 
