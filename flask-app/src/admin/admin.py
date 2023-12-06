@@ -45,11 +45,11 @@ def get_all_admin():
         admin_perms = the_data['admin_perms']
 
         # Constructing the query
-        query = 'insert into admin (first, last, email, admin_perms) values ("'
-        query += first + '", "'
-        query += last + '", "'
-        query += email + '", '
-        query += admin_perms + ')'
+        query = "insert into admin (first, last, email, admin_perms) values ('"
+        query += first + "', '"
+        query += last + "', '"
+        query += email + "', '"
+        query += admin_perms + "')"
         current_app.logger.info(query)
 
         # executing and committing the insert statement 
@@ -75,7 +75,31 @@ def get_admin_by_id(id):
         the_response.mimetype = 'application/json'
         return the_response
     elif flask.request.method == 'PUT':
-        return "no put"
+        the_data = request.json
+        current_app.logger.info(the_data)
+        
+        # extracting the variable
+        first = the_data['first']
+        last = the_data['last']
+        email = the_data['email']
+        admin_perms = the_data['admin_perms']
+        
+
+        # Constructing the query
+        query = "UPDATE admin SET "
+        query += "first = '" + first + "', "
+        query += "last = '" + last + "', "
+        query += "email = '" + email + "', "
+        query += "admin_perms = '" + admin_perms + "' "
+        query += f"WHERE id = {id}"
+        current_app.logger.info(query)
+
+        # executing and committing the insert statement 
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        db.get_db().commit()
+        
+        return 'Success!'
     elif flask.request.method == 'DELETE':
         # Constructing the query
         query = '''
