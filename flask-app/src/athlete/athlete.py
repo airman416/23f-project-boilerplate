@@ -134,9 +134,9 @@ def update_athlete(id):
 def get_athlete_friends(id):
     query = '''
     SELECT a.last_name, a.first_name, a.id
-FROM athlete a
-JOIN friends f ON a.id = f.athlete_id_1 OR a.id = f.athlete_id_2
-WHERE (f.athlete_id_1 = {0} OR f.athlete_id_2 = {0}) AND a.id != {0}'''.format(id)
+    FROM athlete a
+    JOIN friends f ON a.id = f.athlete_id_1 OR a.id = f.athlete_id_2
+    WHERE (f.athlete_id_1 = {0} OR f.athlete_id_2 = {0}) AND a.id != {0}'''.format(id)
 
     cursor = db.get_db().cursor()
     cursor.execute(query)
@@ -185,21 +185,24 @@ def delete_athlete_friend(id):
     athlete_id_2 = the_data['athlete_id_2']
 
     # Constructing the query
-    query = 'delete from friends where athlete_id_1 = {0} AND athlete_id_2 = {1}'.format(id, athlete_id_2)
-    query += str(id) + '", "'
-    query += athlete_id_2 + '");'
+    query = f'delete from friends where athlete_id_1 = {id} AND athlete_id_2 = {athlete_id_2}'
+    # query += str(id) + '", "'
+    # query += athlete_id_2 + '");'
     current_app.logger.info(query)
 
     # executing and committing the insert statement 
     cursor = db.get_db().cursor()
     cursor.execute(query)
     db.get_db().commit()
-  return 'deleted friends for id {0}!'.format(id)
+    
+    # Constructing the query
+    query = f'delete from friends where athlete_id_1 = {athlete_id_2} AND athlete_id_2 = {id}'
+    # query += str(id) + '", "'
+    # query += athlete_id_2 + '");'
+    current_app.logger.info(query)
 
-
-
-
-
-
-
-
+    # executing and committing the insert statement 
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    return f'Deleted friend {athlete_id_2} for athlete {id}!'
