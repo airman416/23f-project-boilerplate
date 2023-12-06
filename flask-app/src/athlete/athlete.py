@@ -7,6 +7,7 @@ athlete = Blueprint('athlete', __name__)
 # Get all customers from the DB
 @athlete.route('/athlete', methods=['GET'])
 def get_athlete():
+    print("got here")
     cursor = db.get_db().cursor()
     cursor.execute('select last_name, first_name, id from athlete')
     row_headers = [x[0] for x in cursor.description]
@@ -14,6 +15,7 @@ def get_athlete():
     theData = cursor.fetchall()
     for row in theData:
         json_data.append(dict(zip(row_headers, row)))
+        print(str(row))
     the_response = make_response(jsonify(json_data))
     the_response.status_code = 200
     the_response.mimetype = 'application/json'
@@ -63,7 +65,7 @@ def create_athlete():
 @athlete.route('/athlete/<id>', methods=['GET'])
 def get_athlete_id(id):
     cursor = db.get_db().cursor()
-    cursor.execute('select last_name, first_name, id from customers where id = {0}'.format(id))
+    cursor.execute('select * from athlete where id = {0}'.format(id))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()

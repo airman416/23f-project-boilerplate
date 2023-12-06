@@ -67,7 +67,7 @@ def add_new_user():
 @user.route('/user/<id>', methods=['GET'])
 def get_user_id (id):
 
-    query = 'SELECT id, last_name, first_name, FROM user WHERE id = ' + str(id)
+    query = 'SELECT id, last_name, first_name FROM user WHERE id = ' + str(id)
     current_app.logger.info(query)
 
     cursor = db.get_db().cursor()

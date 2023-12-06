@@ -67,7 +67,7 @@ def add_new_coach():
 @coach.route('/coach/<id>', methods=['GET'])
 def get_coach_id (id):
 
-    query = 'SELECT id, last_name, first_name, FROM coach WHERE id = ' + str(id)
+    query = 'SELECT * FROM coach WHERE id = ' + str(id)
     current_app.logger.info(query)
 
     cursor = db.get_db().cursor()

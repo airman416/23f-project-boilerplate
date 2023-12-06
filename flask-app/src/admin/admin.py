@@ -4,7 +4,7 @@ from src import db
 import flask
 
 
-admin = Blueprint('customers', __name__)
+admin = Blueprint('admin', __name__)
 
 # Returns a list of all admin with last name, first name, and id attributes
 @admin.route('/admin', methods=['GET', 'POST'])
@@ -12,7 +12,7 @@ def get_all_admin():
     if flask.request.method == 'GET':
         cursor = db.get_db().cursor()
         query = '''
-            SELECT id, first, last FROM admin
+            SELECT id, first, last, admin_perms FROM admin
         '''
         cursor.execute(query)
         row_headers = [x[0] for x in cursor.description]

@@ -41,8 +41,8 @@ CREATE TABLE friends (
    athlete_id_1 INTEGER NOT NULL,
    athlete_id_2 INTEGER NOT NULL,
    PRIMARY KEY(athlete_id_1, athlete_id_2),
-   FOREIGN KEY (athlete_id_1) REFERENCES athlete(id) ON DELETE RESTRICT,
-   FOREIGN KEY (athlete_id_2) REFERENCES athlete(id) ON DELETE RESTRICT
+   FOREIGN KEY (athlete_id_1) REFERENCES athlete(id) ON DELETE CASCADE,
+   FOREIGN KEY (athlete_id_2) REFERENCES athlete(id) ON DELETE CASCADE
 );
 
 
@@ -59,8 +59,8 @@ CREATE TABLE manages_athlete (
    athlete_id INTEGER NOT NULL,
    admin_id INTEGER NOT NULL,
    PRIMARY KEY(athlete_id, admin_id),
-   FOREIGN KEY (athlete_id) REFERENCES athlete(id) ON DELETE RESTRICT,
-   FOREIGN KEY (admin_id) REFERENCES admin(id) ON DELETE RESTRICT
+   FOREIGN KEY (athlete_id) REFERENCES athlete(id) ON DELETE CASCADE,
+   FOREIGN KEY (admin_id) REFERENCES admin(id) ON DELETE CASCADE
 );
 
 
@@ -68,8 +68,8 @@ CREATE TABLE manages_user (
    user_id INTEGER NOT NULL,
    admin_id INTEGER NOT NULL,
    PRIMARY KEY(user_id, admin_id),
-   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE RESTRICT,
-   FOREIGN KEY (admin_id) REFERENCES admin(id) ON DELETE RESTRICT
+   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+   FOREIGN KEY (admin_id) REFERENCES admin(id) ON DELETE CASCADE
 );
 
 
@@ -77,8 +77,8 @@ CREATE TABLE manages_coach (
    coach_id INTEGER NOT NULL,
    admin_id INTEGER NOT NULL,
    PRIMARY KEY(coach_id, admin_id),
-   FOREIGN KEY (coach_id) REFERENCES coach(id) ON DELETE RESTRICT,
-   FOREIGN KEY (admin_id) REFERENCES admin(id) ON DELETE RESTRICT
+   FOREIGN KEY (coach_id) REFERENCES coach(id) ON DELETE CASCADE,
+   FOREIGN KEY (admin_id) REFERENCES admin(id) ON DELETE CASCADE
 );
 
 
@@ -89,6 +89,6 @@ CREATE TABLE feedback (
    submitter_name VARCHAR(40),
    email VARCHAR(100),
    admin_id INTEGER NOT NULL,
-   FOREIGN KEY (admin_id) REFERENCES admin(id)
+   FOREIGN KEY (admin_id) REFERENCES admin(id) ON DELETE CASCADE
 );
 
