@@ -81,7 +81,7 @@ def get_coach_id (id):
 
 
 @coach.route('/coach/<id>', methods=['PUT'])
-def update_drink(coachID):
+def update_coach(coachID):
     
     # collecting data from the request object 
     the_data = request.json
@@ -113,12 +113,17 @@ def update_drink(coachID):
 
 @coach.route('/coach/<id>', methods=['DELETE'])
 def delete_coach(id):   
-    query = 'delete from coach where id = ' + str(id)
-    
+    # Constructing the query
+    query = '''
+    DELETE FROM coach
+    WHERE id = ''' + str(id)
+
+
     # executing and committing the insert statement 
     cursor = db.get_db().cursor()
     cursor.execute(query)
     db.get_db().commit()
+    return 'Deleted Coach!'
     
 
 
@@ -165,12 +170,13 @@ def update_coach(coachID, athleteID):
     
     # collecting data from the request object 
     the_data = request.json
-    current_app.logger.info(the_data)
+    
 
     # Constructing the query
     the_query = 'UPDATE Athlete SET '
     the_query += 'coach_id = "' + coachID + '", '
     the_query += 'WHERE id = {athleteID}'
+    current_app.logger.info(the_data)
 
     current_app.logger.info(the_query)
 

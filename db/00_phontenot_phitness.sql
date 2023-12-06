@@ -34,7 +34,7 @@ CREATE TABLE athlete (
  first_name VARCHAR(40),
  goal_weight INTEGER,
  coach_id INTEGER,
- FOREIGN KEY (coach_id) REFERENCES coach(id)
+ FOREIGN KEY (coach_id) REFERENCES coach(id) ON DELETE SET NULL
 );
 
 CREATE TABLE friends (
