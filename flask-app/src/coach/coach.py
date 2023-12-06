@@ -166,7 +166,7 @@ def add_coachs_athlete(coachID, athleteID):
 
 
 @coach.route('/coach/<id>/athlete', methods=['PUT'])
-def update_coach(coachID, athleteID):
+def update_coachs_athlete(coachID, athleteID):
     
     # collecting data from the request object 
     the_data = request.json
