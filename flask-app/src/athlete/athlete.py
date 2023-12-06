@@ -35,8 +35,6 @@ def create_athlete():
     height = the_data['height']
     date_of_birth = the_data['date_of_birth']
     date_of_birth = datetime.datetime.strptime(date_of_birth, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
-    joined = the_data['joined']
-    joined = datetime.datetime.strptime(joined, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
     last_name = the_data['last_name']
     first_name = the_data['first_name']
     goal_weight = the_data['goal_weight']
@@ -47,13 +45,12 @@ def create_athlete():
     query = "insert into athlete (weight, height, date_of_birth, joined, last_name, first_name, goal_weight, coach_id) values ('"
     query += weight + "', '"
     query += height + "', '"
-    query += date_of_birth + "', '"
-    query += joined + "', '"
-    query += last_name + "', '"
+    query += date_of_birth + "', "
+    query += "CURRENT_TIMESTAMP, " 
+    query += "'" + last_name + "', '"
     query += first_name + "', '"
     query += goal_weight + "', '"
     query += coach_id + "');"
-    current_app.logger.info(query)
 
     # executing and committing the insert statement 
     cursor = db.get_db().cursor()
@@ -106,8 +103,6 @@ def update_athlete(id):
     height = the_data['height']
     date_of_birth = the_data['date_of_birth']
     date_of_birth = datetime.datetime.strptime(date_of_birth, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
-    joined = the_data['joined']
-    joined = datetime.datetime.strptime(joined, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d %H:%M:%S')
     last_name = the_data['last_name']
     first_name = the_data['first_name']
     goal_weight = the_data['goal_weight']
@@ -119,7 +114,6 @@ def update_athlete(id):
     the_query += "weight = '" + str(weight) + "', "
     the_query += "height = '" + str(height) + "', "
     the_query += "date_of_birth = '" + str(date_of_birth) + "', "
-    the_query += "joined = '" + str(joined) + "', "
     the_query += "last_name = '" + last_name + "', "
     the_query += "first_name = '" + first_name + "', "
     the_query += "goal_weight = '" + str(goal_weight) + "', "
@@ -139,10 +133,10 @@ def update_athlete(id):
 @athlete.route('/athlete/<id>/friends', methods=['GET'])
 def get_athlete_friends(id):
     query = '''
-    SELECT last_name, first_name, id
-    FROM athlete
-    INNER JOIN friends ON athlete.id = friends.athlete_id_1 OR athlete.id = friends.athlete_id_2
-    WHERE id = ''' + str(id)
+    SELECT a.last_name, a.first_name, a.id
+FROM athlete a
+JOIN friends f ON a.id = f.athlete_id_1 OR a.id = f.athlete_id_2
+WHERE (f.athlete_id_1 = {0} OR f.athlete_id_2 = {0}) AND a.id != {0}'''.format(id)
 
     cursor = db.get_db().cursor()
     cursor.execute(query)
@@ -168,7 +162,7 @@ def create_athlete_friend(id):
 
 
     # Constructing the query
-    query = 'insert into athlete (athlete_id_1, athlete_id_2) values ("'
+    query = 'insert into friends (athlete_id_1, athlete_id_2) values ("'
     query += str(id) + '", "'
     query += athlete_id_2 + '");'
     current_app.logger.info(query)
@@ -178,12 +172,29 @@ def create_athlete_friend(id):
     cursor.execute(query)
     db.get_db().commit()
     
-    return 'Success!'
+    return 'added friends for id {0}!'.format(id)
 
 
-@athlete.route('/athlete/<id>/friends', methods=['POST'])
-def delete_athlete_friend(id, deletedId):
-  return 'success'
+@athlete.route('/athlete/<id>/friends', methods=['DELETE'])
+def delete_athlete_friend(id):
+    # collecting data from the request object 
+    the_data = request.json
+    current_app.logger.info(the_data)
+
+    #extracting the variable
+    athlete_id_2 = the_data['athlete_id_2']
+
+    # Constructing the query
+    query = 'delete from friends where athlete_id_1 = {0} AND athlete_id_2 = {1}'.format(id, athlete_id_2)
+    query += str(id) + '", "'
+    query += athlete_id_2 + '");'
+    current_app.logger.info(query)
+
+    # executing and committing the insert statement 
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+  return 'deleted friends for id {0}!'.format(id)
 
 
 
