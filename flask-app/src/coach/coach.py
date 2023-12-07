@@ -5,6 +5,32 @@ import datetime
 
 coach = Blueprint('coach', __name__)
 
+@coach.route('/selects', methods=['GET'])
+def get_selects():
+    cursor = db.get_db().cursor()
+
+    cursor.execute('SELECT id, last_name, first_name FROM coach')
+
+    json_data = []
+
+    theData = cursor.fetchall()
+
+    first_name = 2
+    last_name = 1
+    id = 0
+
+    for row in theData:
+        label = row[first_name] + ' ' + row[last_name]
+        json_data.append({
+            'label': label,
+            'value': row[id],
+         })
+
+    print(theData[0][0])
+
+    return jsonify(json_data)
+
+
 # Get all the products from the database
 @coach.route('/coach', methods=['GET'])
 def get_coach():

@@ -50,7 +50,7 @@ def create_athlete():
     query += "'" + last_name + "', '"
     query += first_name + "', '"
     query += goal_weight + "', '"
-    query += coach_id + "');"
+    query += str(coach_id) + "');"
 
     # executing and committing the insert statement 
     cursor = db.get_db().cursor()
