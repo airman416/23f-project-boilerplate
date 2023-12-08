@@ -38,6 +38,7 @@ Within these packages, the code exists that handles all the routes for the perso
 
 The secrets package contains a simple read me documenting how someone would need to run the docker configurations using the required txt files based on the project. 
 
+The thunder-tests package contains JSON data from the tests that we ran using thunder client. 
 
 
 
