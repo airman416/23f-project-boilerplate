@@ -36,6 +36,8 @@ The flask-app package consists of the necessary python code to handle all the ro
 
 Within these packages, the code exists that handles all the routes for the personas. A detailed REST API matrix of all the routes that exist in the project lies on pages 14-15 of the project document. 
 
+The secrets package contains a simple read me documenting how someone would need to run the docker configurations using the required txt files based on the project. 
+
 
 
 
